@@ -13,7 +13,8 @@ def init_params():
 
     params = param_init_gru({}, params, prefix='gru', nin=1, dim=512)
 
-    params = param_init_fflayer({},params,prefix='ff_1',nin=512,nout=1,batch_norm=False)
+    params = param_init_fflayer({},params,prefix='ff_1',nin=512,nout=512,batch_norm=False)
+    params = param_init_fflayer({},params,prefix='ff_2',nin=512,nout=1,batch_norm=False)
 
     return init_tparams(params)
 
@@ -30,7 +31,9 @@ def create_network(p,inp,num_steps=6):
 
         last_state = gru_state[0]
 
-        pred = fflayer(p,state_below=gru_state[0],options={},prefix='ff_1',activ='lambda x: x')
+        h1 = fflayer(p,state_below=gru_state[0],options={},prefix='ff_1',activ='lambda x: T.nnet.relu(x)')
+
+        pred = fflayer(p,state_below=h1,options={},prefix='ff_2',activ='lambda x: x')
         loss += T.sum((pred - inp[:,step+1])**2)
 
     return loss
@@ -83,7 +86,7 @@ if __name__ == "__main__":
     save_snapshot()
 
     for iteration in range(0,2000):
-        train_func(np.asarray([[2,3,2,3,2,3]]).astype('float32'),1.0)
+        train_func(np.asarray([[2,3,2,3,2,3]]).astype('float32'),0.0)
 
     print "eval A", eval_func(np.asarray([[0,1,0,1,0,1]]).astype('float32'))
     print "eval B", eval_func(np.asarray([[2,3,2,3,2,3]]).astype('float32'))
