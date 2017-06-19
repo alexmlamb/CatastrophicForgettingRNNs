@@ -86,7 +86,7 @@ if __name__ == "__main__":
     save_snapshot()
 
     for iteration in range(0,2000):
-        train_func(np.asarray([[2,3,2,3,2,3]]).astype('float32'),0.0)
+        train_func(np.asarray([[2,3,2,3,2,3]]).astype('float32'),10.0)
 
     print "eval A", eval_func(np.asarray([[0,1,0,1,0,1]]).astype('float32'))
     print "eval B", eval_func(np.asarray([[2,3,2,3,2,3]]).astype('float32'))
