@@ -7,8 +7,8 @@ A = T.ivector("A")
 
 #ns = 10
 
-all_memory = T.zeros(shape=(1000,512),dtype=theano.config.floatX)
-all_keyholes = T.zeros(shape=(1000,256),dtype=theano.config.floatX)
+all_memory = theano.shared(np.zeros(shape=(100,1),dtype=theano.config.floatX))
+all_keyholes = theano.shared(np.zeros(shape=(100,1),dtype=theano.config.floatX))
 #shared_tensor = srng.normal(size=(25,128))
 
 def onestep(a,memory,keyholes):
@@ -24,7 +24,7 @@ def onestep(a,memory,keyholes):
 result, updates = theano.scan(fn=onestep,
                               outputs_info=[T.zeros_like(A),all_memory,all_keyholes],
                               non_sequences=[],
-                              n_steps=784)
+                              n_steps=90)
 
 # We only care about A**k, but scan has provided us with A**1 through A**k.
 # Discard the values that we don't care about. Scan is smart enough to
@@ -39,9 +39,9 @@ power = theano.function(inputs=[A], outputs=[final_result,shared], updates=updat
 print "time 2 compile", time.time() - t0
 
 print "running"
-r = power(range(1000))
+r = power(range(100))
 
-#print r[1]
+print r[1]
 print r[1].shape
 
 
