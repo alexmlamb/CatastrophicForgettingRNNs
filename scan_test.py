@@ -13,14 +13,16 @@ all_keyholes = T.zeros(shape=(1000,256),dtype=theano.config.floatX)
 
 def onestep(a,memory,keyholes):
     
-    new_memory = T.set_subtensor(memory[a+10],T.cast(srng.normal(size=memory[a].shape),'float32'))
-    new_keyholes = T.set_subtensor(keyholes[a+10],T.cast(srng.normal(size=keyholes[a].shape),'float32'))
+    new_memory = T.set_subtensor(memory[a],T.cast(srng.normal(size=memory[a].shape),'float32'))
+    new_keyholes = T.set_subtensor(keyholes[a],T.cast(srng.normal(size=keyholes[a].shape),'float32'))
     
+    
+
     return a + 1, new_memory, new_keyholes
 
 # Symbolic description of the result
 result, updates = theano.scan(fn=onestep,
-                              outputs_info=[T.ones_like(A),all_memory,all_keyholes],
+                              outputs_info=[T.zeros_like(A),all_memory,all_keyholes],
                               non_sequences=[],
                               n_steps=784)
 
